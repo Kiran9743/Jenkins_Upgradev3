@@ -1,25 +1,20 @@
 pipeline {
-    
     agent any
     environment {
-        RELEASE='20.04'
+        RELEASE = '20.04'  // Declaring globally
+        LOG_LEVEL = 'INFO' // Declaring globally to ensure access in all stages
     }
 
     stages {
-
         stage('Build') {
-            agent any
-            environment {
-                LOG_LEVEL='INFO'
-            }
             steps {
                 echo "Building release ${RELEASE} with log level ${LOG_LEVEL}..."
             }
         }
-        
+
         stage('Test') {
             steps {
-                echo "Testing. I can see release ${RELEASE}, but not log level ${LOG_LEVEL}"
+                echo "Testing. I can see release ${RELEASE} and log level ${LOG_LEVEL}."
             }
         }
     }
