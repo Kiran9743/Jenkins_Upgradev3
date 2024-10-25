@@ -1,0 +1,52 @@
+pipeline{
+
+agent any 
+    try {
+        stages{
+            stage("Parallel 1") {
+                steps {
+                    parallel (
+                       'firstTask' : { 
+                            build( "DSL-Controll-Demo-Fibonacci-1" )
+                        },
+                        'secondTask' : { 
+                            build( "DSL-Controll-Demo-Fibonacci-2" )
+                        }
+                    )
+                }
+            }
+            stage("Feature") {
+                steps {
+                        build( "DSL-Controll-Demo-Fibonacci-5" )
+                        build( "DSL-Controll-Demo-Fibonacci-6" )
+                }
+            }
+            stage("Parallel 2") {
+                steps{
+                    parallel (
+                        "thirdTask" : { 
+                            build( "DSL-Controll-Demo-Fibonacci-3" )
+                        },
+                        "forthTask" : { 
+                            build( "DSL-Controll-Demo-Fibonacci-4" )
+                        }
+                    )
+                }
+            }
+        }
+    }   
+
+    catch(all) {
+        currentBuild.result = 'FAILURE'
+    }   
+
+    if(currentBuild.result != 'FAILURE') {
+        stages{
+            stage("Post Build") {
+                steps {
+                    build("DSL-Controll-Demo-Fibonacci-7")
+                }   
+            }   
+        }
+    }
+}
